@@ -18,6 +18,7 @@ public:
 			entity->addComponent<TransformComponent>();
 		}
 		transform = &entity->getComponent<TransformComponent>();
+
 	}
 
 	void update() override {

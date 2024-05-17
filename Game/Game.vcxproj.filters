@@ -92,5 +92,8 @@
     <ClInclude Include="ECS\DialogtextComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ECS\InventoryComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

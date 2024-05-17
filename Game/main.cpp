@@ -12,17 +12,19 @@ int main(int argc, char* argv[])
     int frameTime;
 
     game = new Game();
-    game->init("title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 640, false);
 
+    game->init("title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 640, false);
 
     while (game->running()) {
 
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
-        
+
         game->update();
+
         game->render();
+
         frameTime = SDL_GetTicks() - frameStart;
         if (frameDelay > frameTime) {
             SDL_Delay(frameDelay - frameTime);

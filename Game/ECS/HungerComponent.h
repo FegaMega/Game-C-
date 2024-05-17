@@ -21,7 +21,7 @@ public:
 	float getHunger() { return Hunger; }
 	int32_t getTime() { return Time; }
 	int getLossRate() { return LossRate; }
-	int getLossAmount() { return LossAmount; }
+	float getLossAmount() { return LossAmount; }
 
 	void addHunger(float a) {
 		Hunger += a;

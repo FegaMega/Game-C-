@@ -20,7 +20,7 @@ TextureManager* Game::TexManager = new TextureManager;
 
 auto& Player(manager.addEntity());
 auto& wall(manager.addEntity());
-auto& banan(manager.addEntity());
+
 
 
 Game::Game(){
@@ -72,13 +72,24 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	Player.addComponent<KeyboardController>();	
 	Player.addComponent<ColliderComponent>("Player");
 	Player.addComponent<HungerComponent>(SDL_GetTicks(), 100, 1000, 1);
+	Player.addComponent<InventoryComponent>();
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
+	Player.getComponent<InventoryComponent>().addItem("Banana");
 	Player.addGroup(Game::groupPlayers);
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 32, 32, 1);
 	wall.addComponent<SpriteComponent>("Dirt");
 	wall.addComponent<ColliderComponent>("wall");
 
-	wall.addGroup(Game::groupFood);
+	wall.addGroup(Game::groupColliders);
 
 	assets->CreateBanana(Vector2D(300, 140), 1);
 	assets->CreateBanana(Vector2D(600, 120), 1);
@@ -110,30 +121,59 @@ void Game::handleEvents()
 	}
 }
 /* The Game logic and shit */
-void Game::update(){
-
+void Game::update(){ // Error 3.x 
 	manager.refresh();
 	manager.update();
 	Player.getComponent<HungerComponent>().LoseHunger(SDL_GetTicks());
-	for (auto& c : colliders) {
-		if (Player.hasComponent<ColliderComponent>() == true and c->hasComponent<ColliderComponent>() == true) {
-			if (Collision::AABB(Player.getComponent<ColliderComponent>().collider, c->getComponent<ColliderComponent>().collider) == true) {
-				std::cout << "Wall Hit" << std::endl;
-			}
+	for (auto& c : colliders) { // Error 3.1.x
+		if (Player.hasComponent<ColliderComponent>() == false) {
+			std::cout << "Player : " << &Player << "doesn't have Component : " << "ColliderComponent" << std::endl;
+			std::cout << "Error : 3.1.1" << std::endl;
 		}
-	}
-	for (auto& f : foods) {
-		if (f->isActive() == true) {
-			if (Collision::AABB(Player.getComponent<ColliderComponent>().collider, f->getComponent<ColliderComponent>().collider)){
-				f->getComponent<DialogtextComponent>().setRender(true);
-				if (Player.getComponent<KeyboardController>().pickUp == true) {
-					Player.getComponent<HungerComponent>().addHunger(f->getComponent<FoodComponent>().Eat());
-					f->destroy();
+		else {
+			if (c->hasComponent<ColliderComponent>() == false) {
+				std::cout << "Collider : " << c << " doesn't have Component : " << "ColliderComponent" << std::endl;
+				std::cout << "Error : 3.1.2" << std::endl;
+			}
+			else{
+				if (Collision::AABB(Player.getComponent<ColliderComponent>().collider, c->getComponent<ColliderComponent>().collider) == true) {
+					std::cout << "Wall Hit" << std::endl;
 				}
 			}
+		}
+		
+	}
+	for (auto& f : foods) {// Error 3.2.x
+		if (f->isActive() == true) {
+
+			if (Player.hasComponent<ColliderComponent>() == false) {
+				std::cout << "Player : " << &Player << "doesn't have Component : " << "ColliderComponent" << std::endl;
+				std::cout << "Error : 3.2.1" << std::endl;
+			}
 			else {
-				if (f->hasComponent<DialogtextComponent>() == true) {
-					f->getComponent<DialogtextComponent>().setRender(false);
+				if (f->hasComponent<ColliderComponent>() == false) {
+					std::cout << "Food : " << f << " doesn't have Component : " << "ColliderComponent" << std::endl;
+					std::cout << "Error : 3.2.2" << std::endl;
+				}
+				else {
+					if (f->hasComponent<DialogtextComponent>() == false) {
+						std::cout << "Food : " << f << " doesn't have Component : " << "DialogtextComponent" << std::endl;
+						std::cout << "Error : 3.2.3" << std::endl;
+					}
+					else {
+						if (Collision::AABB(Player.getComponent<ColliderComponent>().collider, f->getComponent<ColliderComponent>().collider) == true) {
+							f->getComponent<DialogtextComponent>().setRender(true);
+							if (Player.getComponent<KeyboardController>().pickUp == true) {
+								Player.getComponent<HungerComponent>().addHunger(f->getComponent<FoodComponent>().Eat());
+								f->destroy();
+							}
+						}
+						else {
+							if (f->hasComponent<DialogtextComponent>() == true) {
+								f->getComponent<DialogtextComponent>().setRender(false);
+							}
+						}
+					}
 				}
 			}
 		}

@@ -7,3 +7,4 @@
 #include "HungerComponent.h"
 #include "FoodComponent.h"
 #include "DialogtextComponent.h"
+#include "InventoryComponent.h"
