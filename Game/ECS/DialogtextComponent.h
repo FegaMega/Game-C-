@@ -12,8 +12,8 @@ private:
 	SDL_Surface* surface;
 	SDL_Rect srcRect, destRect;
 	bool render;
-	const char* text;
 	TTF_Font* font;
+	SDL_Color c = { 255, 255, 255, 0 };
 
 public:
 	DialogtextComponent() {};
@@ -35,13 +35,18 @@ public:
 	}
 	
 	void setTex(const char* text) {
-		SDL_Color c = { 255, 255, 255, 0 };
 		surface = TTF_RenderText_Solid(font, text, c);
 		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 		SDL_FreeSurface(surface);
+		
 		SDL_QueryTexture(texture, NULL, NULL, &srcRect.w, &srcRect.h);
+
 		destRect.w = srcRect.w * transform->scale;
 		destRect.h = srcRect.h * transform->scale;
+	}
+
+	void setTex(std::string text) {
+		setTex(text.c_str());
 	}
 
 	inline void setRender(bool r) { render = r; }
