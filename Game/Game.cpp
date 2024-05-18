@@ -82,7 +82,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	Player.getComponent<InventoryComponent>().addItem("Banana");
 	Player.getComponent<InventoryComponent>().addItem("Banana");
 	Player.getComponent<InventoryComponent>().addItem("Banana");
-	//Player.getComponent<InventoryComponent>().addItem("Banana");
+	//Player.getComponent<InventoryComponent>().addItem("Banana")
 	Player.addGroup(Game::groupPlayers);
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 32, 32, 1);
