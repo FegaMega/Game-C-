@@ -34,7 +34,7 @@ public:
 	}
 	
 	void setTex(const char* text) {
-		surface = TTF_RenderText_Solid(font, text, c);
+		surface = TTF_RenderText_Solid_Wrapped(font, text, c, 0);
 		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 		SDL_FreeSurface(surface);
 		

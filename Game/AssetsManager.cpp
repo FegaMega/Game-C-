@@ -18,7 +18,7 @@ void AssetManager::CreateBanana(Vector2D pos, int scale)
 	Banana.addComponent<FoodComponent>(20);
 	Banana.addComponent<ColliderComponent>("Banana");
 	Banana.addComponent<DialogtextComponent>();
-	Banana.getComponent<DialogtextComponent>().setTex("Press E to eat 1");
+	Banana.getComponent<DialogtextComponent>().setTex("Eat : E\nPick up : F");
 	Banana.addGroup(Game::groupFood);
 
 }

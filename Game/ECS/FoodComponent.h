@@ -15,7 +15,7 @@ public:
 	~FoodComponent() {}
 
 	int Eat() {
-		
+		entity->destroy();
 		return foodValue;
 
 	}

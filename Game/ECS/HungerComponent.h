@@ -4,12 +4,14 @@
 #include "stdint.h"
 
 class HungerComponent : public Component {
-public:
+private:
 	
 	float Hunger;
 	int32_t Time;
 	int LossRate;
 	float LossAmount;
+
+public:
 
 	HungerComponent(int32_t time, float hunger, int lossRate, float lossAmount){
 		Time = time;
