@@ -1,5 +1,4 @@
 #include "Components.h"
-#include "SDL.h"
 #include "../TextureManager.h"
 #include <map>
 #include "../AssetsManager.h"
