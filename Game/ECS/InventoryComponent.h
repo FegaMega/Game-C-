@@ -25,45 +25,16 @@ public:
 
 class InventoryComponent : public Component {
 private:
-	Manager ItemManager;
-	Entity* items[10];
-	int Selected;
+	Manager manager;
+	std::vector<Entity*> items;
+	int Selected = 0;
+	enum groupLabels : std::size_t {
+		inventory
+	};
 
+	int findFirstEmptySlot(std::string id);
 
-	int findFirstEmptySlot(std::string id) {
-		int s = NULL;
-		for (int i = 0; i < 10; i++) {
-			if (items[i]->getComponent<itemComponent>().getAmount() == 0 and s != NULL) {
-				s = i;
-			}
-			
-			if (items[i]->getID() == id) {
-				return i+10;
-			}
-			
-		}
-		return s+20;
-	}
-
-	Entity& addEntity(int n, std::string id) {
-		auto& item(ItemManager.addEntity());
-		
-		item.setID(id);
-		std::cout << "2" << std::endl;
-		items[n] = &item;
-		std::cout << "3" << std::endl;
-		item.addComponent<itemComponent>(1, n);
-		std::cout << "4" << std::endl;
-		item.addComponent<TransformComponent>((float)80 + n * 48.0f, 600, 32, 32, 1);
-		std::cout << "5" << std::endl;
-		item.addComponent<SpriteComponent>(id);
-		item.addComponent<DialogtextComponent>();
-		std::stringstream num;
-		num << item.getComponent<itemComponent>().getAmount();
-		item.getComponent<DialogtextComponent>().setTex(num.str().c_str());
-		item.getComponent<DialogtextComponent>().setRender(true);
-		return item;
-	}
+	Entity& addEntity(int n, std::string id);
 public:
 
 	InventoryComponent() {}
@@ -71,36 +42,24 @@ public:
 
 	void init() {
 		Selected = 0;
+		for (int i = 0; i < 10; i++) {
+			auto& n(manager.addEntity());
+			n.addComponent<itemComponent>(0, i);
+
+			n.addGroup(inventory);
+		}
+		items = (manager.getGroup(inventory));
 	};
-	void addItem(std::string id) {
-		int n = findFirstEmptySlot(id);
-		if (n < 10) {
-			// should throw old one 
-			// havent made that possible yet
-			addEntity(n, id);
-			
-		}
-		else if(n < 20) {
-			// should throw old one 
-			// havent made that possible yet
-			items[n-10]->getComponent<itemComponent>().addAmount(1);
-			std::stringstream num;
-			num << items[n-10]->getComponent<itemComponent>().getAmount();
-			items[n-10]->getComponent<DialogtextComponent>().setTex(num.str());
-		}
-		else {
-			addEntity(Selected, id);
-		}
-	}
+	void addItem(std::string id);
 
 	
 
 	void update() {
-		ItemManager.update();
+		manager.update();
 	}
 
 	void draw() {
-		ItemManager.draw();
+		manager.draw();
 	}
 
 };

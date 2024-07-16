@@ -34,7 +34,7 @@ using ComponentArray = std::array<Component*, maxComponenets>;
 class Component {
 public:
 	Entity* entity;
-	
+
 	virtual void init() {}
 	virtual void update() {}
 	virtual void draw() {}
@@ -49,7 +49,7 @@ private:
 
 	Manager& manager;
 	bool active = true;
-	std::string id = NULL;
+	std::string ID = "";
 	std::vector<std::unique_ptr<Component>> components;
 
 	ComponentArray componentArray;
@@ -57,7 +57,7 @@ private:
 	GroupBitset groupBitset;
 
 public:
-	
+
 	Entity(Manager& mManager) : manager(mManager) {}
 
 	void update() {
@@ -69,16 +69,16 @@ public:
 	bool isActive() { return active; }
 	void destroy() { active = false; }
 
-	void setID(std::string S) { id = S; }
-	std::string getID() { return id; }
+	void setID(std::string s) { ID = s; }
+	std::string getID() { return ID; }
 
-	bool hasGroup(Group mGroup){
+	bool hasGroup(Group mGroup) {
 		return groupBitset[mGroup];
 	}
 
 	void addGroup(Group mGroup);
 
-	void delGroup(Group mGroup){
+	void delGroup(Group mGroup) {
 		groupBitset[mGroup] = false;
 	}
 
@@ -95,7 +95,7 @@ public:
 
 		componentArray[getComponentTypeID<T>()] = c;
 		componentBitset[getComponentTypeID<T>()] = true;
-		
+
 		c->init();
 		return *c;
 	}
@@ -130,7 +130,7 @@ public:
 					}),
 				std::end(v));
 		}
-		
+
 		entities.erase(std::remove_if(std::begin(entities), std::end(entities),
 			[](const std::unique_ptr<Entity>& mEntity)
 			{
@@ -161,4 +161,3 @@ private:
 	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
 
 };
-
