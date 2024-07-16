@@ -10,7 +10,11 @@ private:
 	int32_t Time;
 	int LossRate;
 	float LossAmount;
-
+	bool render;
+	SDL_Rect outsideScr, outsideDest;
+	SDL_Rect insideScr, insideDest;
+	//Needs SDL_Surface and a rendering code for it, also needs handling for the rects and makintg the correct colors and shit
+	// PLS help
 public:
 
 	HungerComponent(int32_t time, float hunger, int lossRate, float lossAmount){
@@ -18,12 +22,19 @@ public:
 		Hunger = hunger;
 		LossRate = lossRate;
 		LossAmount = lossAmount;
+		render = true;
 	}
 
 	float getHunger() { return Hunger; }
+	float* getHungerPtr() { return &Hunger; }
 	int32_t getTime() { return Time; }
 	int getLossRate() { return LossRate; }
 	float getLossAmount() { return LossAmount; }
+	bool getRender() { return render; };
+
+	void setRender(bool r) {
+		render = r;
+	}
 
 	void addHunger(float a) {
 		Hunger += a;
@@ -45,5 +56,7 @@ public:
 			Time = time;
 		}
 	}
+
+	
 
 };

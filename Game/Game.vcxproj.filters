@@ -101,5 +101,8 @@
     <ClInclude Include="Debug helper\DebugFuncs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ECS\ProgressbarComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

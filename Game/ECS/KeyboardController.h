@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../Game.h"
 #include "ECS.h"
 #include "Components.h"
@@ -6,16 +8,19 @@
 class KeyboardController : public Component {
 public:
 	TransformComponent *transform;
+	bool Use;
 	bool pickUp;
 	void init() override {
+		Use = false;
 		pickUp = false;
 		transform = &entity->getComponent<TransformComponent>();
 	}
 
 	void update() override {
 		
+		Use = false;
 		pickUp = false;
-		
+
 		if (Game::event.type == SDL_KEYDOWN) {
 			switch (Game::event.key.keysym.sym){
 				case SDLK_w:
@@ -39,6 +44,8 @@ public:
 					}
 					break;
 				case SDLK_e:
+					Use = not Use;
+				case SDLK_f:
 					pickUp = not pickUp;
 				default:
 					break;

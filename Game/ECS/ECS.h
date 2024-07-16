@@ -49,6 +49,7 @@ private:
 
 	Manager& manager;
 	bool active = true;
+	std::string id = NULL;
 	std::vector<std::unique_ptr<Component>> components;
 
 	ComponentArray componentArray;
@@ -67,6 +68,9 @@ public:
 	}
 	bool isActive() { return active; }
 	void destroy() { active = false; }
+
+	void setID(std::string S) { id = S; }
+	std::string getID() { return id; }
 
 	bool hasGroup(Group mGroup){
 		return groupBitset[mGroup];

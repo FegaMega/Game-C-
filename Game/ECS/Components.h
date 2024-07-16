@@ -8,3 +8,4 @@
 #include "FoodComponent.h"
 #include "DialogtextComponent.h"
 #include "InventoryComponent.h"
+#include "ProgressbarComponent.h"

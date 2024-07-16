@@ -8,6 +8,7 @@
 #include "AssetsManager.h"
 
 
+
 Map* map;
 Manager manager;
 
@@ -24,6 +25,7 @@ auto& wall(manager.addEntity());
 
 
 Game::Game(){
+	std::cout << 1 << std::endl;
 
 }
 Game::~Game(){
@@ -72,16 +74,14 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	Player.addComponent<KeyboardController>();	
 	Player.addComponent<ColliderComponent>("Player");
 	Player.addComponent<HungerComponent>(SDL_GetTicks(), 100, 1000, 1);
+	std::cout << "75" << std::endl;
 	Player.addComponent<InventoryComponent>();
+	std::cout << "77" << std::endl;
 	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
-	Player.getComponent<InventoryComponent>().addItem("Banana");
+	std::cout << "79" << std::endl;
+	Player.addComponent<ProgressbarComponent>(50, 50, 110, 20, Player.getComponent<HungerComponent>().getHunger(), 1, SDL_Color{ 0, 0, 255 });
+		
+	
 	//Player.getComponent<InventoryComponent>().addItem("Banana")
 	Player.addGroup(Game::groupPlayers);
 
@@ -125,6 +125,7 @@ void Game::update(){ // Error 3.x
 	manager.refresh();
 	manager.update();
 	Player.getComponent<HungerComponent>().LoseHunger(SDL_GetTicks());
+	
 	for (auto& c : colliders) { // Error 3.1.x
 		if (Player.hasComponent<ColliderComponent>() == false) {
 			std::cout << "Player : " << &Player << "doesn't have Component : " << "ColliderComponent" << std::endl;
@@ -163,8 +164,12 @@ void Game::update(){ // Error 3.x
 					else {
 						if (Collision::AABB(Player.getComponent<ColliderComponent>().collider, f->getComponent<ColliderComponent>().collider) == true) {
 							f->getComponent<DialogtextComponent>().setRender(true);
-							if (Player.getComponent<KeyboardController>().pickUp == true) {
+							if (Player.getComponent<KeyboardController>().Use == true) {
 								Player.getComponent<HungerComponent>().addHunger(f->getComponent<FoodComponent>().Eat());
+								f->destroy();
+							}
+							if (Player.getComponent<KeyboardController>().pickUp == true) {
+								Player.getComponent<InventoryComponent>().addItem(f->getID());
 								f->destroy();
 							}
 						}
@@ -178,6 +183,7 @@ void Game::update(){ // Error 3.x
 			}
 		}
 	}
+	Player.getComponent<ProgressbarComponent>().updateProgress(Player.getComponent<HungerComponent>().getHunger());
 }
 /* It renders. What did you think */
 void Game::render(){

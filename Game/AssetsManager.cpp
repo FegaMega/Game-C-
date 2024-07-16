@@ -13,6 +13,7 @@ AssetManager::~AssetManager()
 void AssetManager::CreateBanana(Vector2D pos, int scale)
 {
 	auto& Banana(manager->addEntity());
+	Banana.setID("Banana");
 	Banana.addComponent<TransformComponent>(pos.x, pos.y, 32, 32, scale);
 	Banana.addComponent<SpriteComponent>("Banana");
 	Banana.addComponent<FoodComponent>(20);
