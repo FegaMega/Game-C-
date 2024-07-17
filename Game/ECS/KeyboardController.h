@@ -10,16 +10,23 @@ public:
 	TransformComponent *transform;
 	bool Use;
 	bool pickUp;
+	bool UseInventory;
 	void init() override {
 		Use = false;
 		pickUp = false;
+		UseInventory = false;
 		transform = &entity->getComponent<TransformComponent>();
 	}
+
+	bool getUse() { return Use; }
+	bool getpickUp() { return pickUp; }
+	bool getUseInventory() { return UseInventory; }
 
 	void update() override {
 		
 		Use = false;
 		pickUp = false;
+		UseInventory = false;
 
 		if (Game::event.type == SDL_KEYDOWN) {
 			switch (Game::event.key.keysym.sym){
@@ -44,9 +51,14 @@ public:
 					}
 					break;
 				case SDLK_e:
-					Use = not Use;
+					Use = true;
+					break;
 				case SDLK_f:
-					pickUp = not pickUp;
+					pickUp = true;
+					break;
+				case SDLK_q:
+					UseInventory = true;
+					break;
 				default:
 					break;
 			}

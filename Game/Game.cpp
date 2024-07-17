@@ -24,10 +24,7 @@ auto& wall(manager.addEntity());
 
 
 
-Game::Game(){
-	std::cout << 1 << std::endl;
-
-}
+Game::Game(){}
 Game::~Game(){
 
 }
@@ -74,11 +71,8 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	Player.addComponent<KeyboardController>();	
 	Player.addComponent<ColliderComponent>("Player");
 	Player.addComponent<HungerComponent>(SDL_GetTicks(), 100, 1000, 1);
-	std::cout << "75" << std::endl;
 	Player.addComponent<InventoryComponent>();
-	std::cout << "77" << std::endl;
 	Player.getComponent<InventoryComponent>().addItem("Banana");
-	std::cout << "79" << std::endl;
 	Player.addComponent<ProgressbarComponent>(50, 50, 110, 20, Player.getComponent<HungerComponent>().getHunger(), 1, SDL_Color{ 0, 0, 255 });
 		
 	
@@ -169,7 +163,7 @@ void Game::update(){ // Error 3.x
 								f->destroy();
 							}
 							if (Player.getComponent<KeyboardController>().pickUp == true) {
-								Player.getComponent<InventoryComponent>().addItem(f->getID());
+								Player.getComponent<InventoryComponent>().addItem(f);
 								f->destroy();
 							}
 						}
@@ -180,6 +174,24 @@ void Game::update(){ // Error 3.x
 						}
 					}
 				}
+			}
+		}
+	}
+	if (Player.getComponent<KeyboardController>().getUseInventory() == true) {
+		std::cout << Player.getComponent<KeyboardController>().getUseInventory() << std::endl;
+		Entity* selected = Player.getComponent<InventoryComponent>().returnItem();
+		if (selected->getComponent<itemComponent>().getAmount() > 0) {
+
+			if (selected->getID() == "Banana") {
+				Player.getComponent<HungerComponent>().addHunger(selected->getComponent<FoodComponent>().getFoodValue());
+				std::cout << "lökjalökghjdswag" << std::endl;
+				selected->getComponent<itemComponent>().subAmount(1);
+				if (selected->getComponent<itemComponent>().getAmount() <= 0) {
+					Player.getComponent<InventoryComponent>().destroyItem(selected);
+				}
+			}
+			else {
+				std::cout << "inventory item selected doesnt have a use" << std::endl;
 			}
 		}
 	}

@@ -20,6 +20,8 @@ public:
 
 	}
 
+	int getFoodValue() { return foodValue; }
+
 private:
 
 	int foodValue;

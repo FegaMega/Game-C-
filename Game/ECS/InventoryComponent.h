@@ -6,19 +6,24 @@
 
 class itemComponent : public Component {
 private:
-	int amount;
+	int amount = 0;
 	int slotID;
+	DialogtextComponent* Dialogtext;
 public:
 	itemComponent(int Amount, int SlotID) {
 		amount = Amount;
 		slotID = SlotID;
 	}
 	~itemComponent(){}
+	void init() {
+		Dialogtext = &entity->getComponent<DialogtextComponent>();
+	}
 
 	int getAmount() { return amount; }
 	int getSlotID() { return slotID; }
 
-	void addAmount(int i) { amount += i; }
+	void addAmount(int i);
+	void subAmount(int i);
 	void setSlotID(int i) { slotID = i; }
 
 };
@@ -35,6 +40,7 @@ private:
 	int findFirstEmptySlot(std::string id);
 
 	Entity& addEntity(int n, std::string id);
+	Entity& addEntity(int n, Entity* e);
 public:
 
 	InventoryComponent() {}
@@ -51,10 +57,14 @@ public:
 		items = (manager.getGroup(inventory));
 	};
 	void addItem(std::string id);
-
-	
+	void addItem(Entity* e);
+	void destroyItem(Entity* selected);
+	void setSelected(int i) { Selected = i; }
+	int getSelected() { return Selected; }
+	Entity* returnItem();
 
 	void update() {
+		manager.refresh();
 		manager.update();
 	}
 
