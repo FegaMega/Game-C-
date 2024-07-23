@@ -25,7 +25,7 @@ public:
 		render = true;
 	}
 
-	float getHunger() { return Hunger; }
+ 	float getHunger() { return Hunger; }
 	float* getHungerPtr() { return &Hunger; }
 	int32_t getTime() { return Time; }
 	int getLossRate() { return LossRate; }

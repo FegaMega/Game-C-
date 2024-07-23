@@ -36,7 +36,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	}
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
-		std::cout << "SDL initiali<ed" << std::endl;
+		std::cout << "SDL initialized" << std::endl;
 
 		window = SDL_CreateWindow(title, x, y, width, height, flags);
 		if (window)
@@ -61,6 +61,7 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	}
 
 	TexManager->AddTexture("Banana", "assets/Food/banan.png");
+	TexManager->AddTexture("Apple", "assets/Food/apple.png");
 	TexManager->AddTexture("Player", "assets/player32.png");
 	TexManager->AddTexture("Dirt", "assets/map/dirt.png");
 
@@ -71,12 +72,13 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	Player.addComponent<KeyboardController>();	
 	Player.addComponent<ColliderComponent>("Player");
 	Player.addComponent<HungerComponent>(SDL_GetTicks(), 100, 1000, 1);
-	Player.addComponent<InventoryComponent>();
+	Player.addComponent<InventoryComponent>(&manager);
 	Player.getComponent<InventoryComponent>().addItem("Banana");
+
 	Player.addComponent<ProgressbarComponent>(50, 50, 110, 20, Player.getComponent<HungerComponent>().getHunger(), 1, SDL_Color{ 0, 0, 255 });
 		
 	
-	//Player.getComponent<InventoryComponent>().addItem("Banana")
+	
 	Player.addGroup(Game::groupPlayers);
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 32, 32, 1);
@@ -85,10 +87,10 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 
 	wall.addGroup(Game::groupColliders);
 
-	assets->CreateBanana(Vector2D(300, 140), 1);
-	assets->CreateBanana(Vector2D(600, 120), 1);
-	assets->CreateBanana(Vector2D(200, 350), 1);
-	assets->CreateBanana(Vector2D(400, 500), 1);
+	assets->CreateComponent(Vector2D(300, 140), 1, "Banana");
+	assets->CreateComponent(Vector2D(600, 120), 1, "Banana");
+	assets->CreateComponent(Vector2D(200, 350), 1, "Banana");
+	assets->CreateComponent(Vector2D(400, 500), 1, "Apple");
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
@@ -164,7 +166,6 @@ void Game::update(){ // Error 3.x
 							}
 							if (Player.getComponent<KeyboardController>().pickUp == true) {
 								Player.getComponent<InventoryComponent>().addItem(f);
-								f->destroy();
 							}
 						}
 						else {
@@ -178,21 +179,21 @@ void Game::update(){ // Error 3.x
 		}
 	}
 	if (Player.getComponent<KeyboardController>().getUseInventory() == true) {
-		std::cout << Player.getComponent<KeyboardController>().getUseInventory() << std::endl;
-		Entity* selected = Player.getComponent<InventoryComponent>().returnItem();
-		if (selected->getComponent<itemComponent>().getAmount() > 0) {
-
-			if (selected->getID() == "Banana") {
-				Player.getComponent<HungerComponent>().addHunger(selected->getComponent<FoodComponent>().getFoodValue());
-				std::cout << "lökjalökghjdswag" << std::endl;
-				selected->getComponent<itemComponent>().subAmount(1);
-				if (selected->getComponent<itemComponent>().getAmount() <= 0) {
-					Player.getComponent<InventoryComponent>().destroyItem(selected);
+		Player.getComponent<InventoryComponent>().setSelected(Player.getComponent<KeyboardController>().Selected);
+		Entity* selected = Player.getComponent<InventoryComponent>().returnItem(); // return no mater if there is a item, in short crashes
+		if (selected != nullptr){
+				if (selected->getComponent<itemComponent>().getAmount() > 0) {
+					if (selected->hasComponent<FoodComponent>() == true) {
+						Player.getComponent<HungerComponent>().addHunger(selected->getComponent<FoodComponent>().getFoodValue());
+						selected->getComponent<itemComponent>().subAmount(1);
+						if (selected->getComponent<itemComponent>().getAmount() < 1) {
+							Player.getComponent<InventoryComponent>().destroyItem(selected);
+						}
+					}
+					else {
+						std::cout << "inventory item selected doesnt have a use" << std::endl;
+					}
 				}
-			}
-			else {
-				std::cout << "inventory item selected doesnt have a use" << std::endl;
-			}
 		}
 	}
 	Player.getComponent<ProgressbarComponent>().updateProgress(Player.getComponent<HungerComponent>().getHunger());

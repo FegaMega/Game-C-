@@ -19,7 +19,7 @@ public:
 		Dialogtext = &entity->getComponent<DialogtextComponent>();
 	}
 
-	int getAmount() { return amount; }
+	int getAmount();
 	int getSlotID() { return slotID; }
 
 	void addAmount(int i);
@@ -30,46 +30,53 @@ public:
 
 class InventoryComponent : public Component {
 private:
-	Manager manager;
+	Manager* manager;
 	std::vector<Entity*> items;
 	int Selected = 0;
 	enum groupLabels : std::size_t {
 		inventory
 	};
 
-	int findFirstEmptySlot(std::string id);
+	int findFirstEmptySlot();
+	int findItemWithSameID(std::string id);
+
+	TransformComponent* transform;
 
 	Entity& addEntity(int n, std::string id);
-	Entity& addEntity(int n, Entity* e);
+	Entity* addEntity(int n, Entity* e);
 public:
 
-	InventoryComponent() {}
+	InventoryComponent(Manager* man) {
+		manager = man;
+		
+	}
 	~InventoryComponent() {}
 
 	void init() {
+		transform = &entity->getComponent<TransformComponent>();
 		Selected = 0;
-		for (int i = 0; i < 10; i++) {
-			auto& n(manager.addEntity());
-			n.addComponent<itemComponent>(0, i);
-
-			n.addGroup(inventory);
-		}
-		items = (manager.getGroup(inventory));
+		
+		items = (manager->getGroup(inventory));
 	};
 	void addItem(std::string id);
 	void addItem(Entity* e);
 	void destroyItem(Entity* selected);
+	void throwItem(Entity* selected);
 	void setSelected(int i) { Selected = i; }
 	int getSelected() { return Selected; }
 	Entity* returnItem();
 
 	void update() {
-		manager.refresh();
-		manager.update();
+		items = manager->getGroup(inventory);
+		for (auto& i : items) {
+			i->update();
+		}
 	}
 
 	void draw() {
-		manager.draw();
+		for (auto& i : items) {
+			i->draw();
+		}
 	}
 
 };

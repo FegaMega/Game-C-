@@ -12,7 +12,15 @@ class Manager;
 
 using ComponentID = std::size_t;
 using Group = std::size_t;
-
+template <typename T> int findinvector(std::vector<T> components, T c) {
+	int i = 0;
+	for(auto& p : components) {
+		if (p == c) {
+			return i;
+		}
+		i++;
+	}
+}
 inline ComponentID getComponentTypeID() {
 	static ComponentID lastID = 0;
 	return lastID++;
@@ -49,19 +57,25 @@ private:
 
 	Manager& manager;
 	bool active = true;
-	std::string ID = "";
+	std::string ID = "none";
+
 	std::vector<std::unique_ptr<Component>> components;
 
-	ComponentArray componentArray;
-	ComponentBitset componentBitset;
-	GroupBitset groupBitset;
+	ComponentArray componentArray{};
+	ComponentBitset componentBitset{};
+	GroupBitset groupBitset{};
 
 public:
 
 	Entity(Manager& mManager) : manager(mManager) {}
 
 	void update() {
-		for (auto& c : components) c->update();
+		for (auto& c : components)
+		{
+			c->entity = this;
+			c->update();
+	
+		}
 	}
 	void draw() {
 		for (auto& c : components) c->draw();
@@ -77,10 +91,11 @@ public:
 	}
 
 	void addGroup(Group mGroup);
+	void addGroup(Group mGroup, int i);
 
-	void delGroup(Group mGroup) {
-		groupBitset[mGroup] = false;
-	}
+	void delGroup(Group mGroup);
+
+	void resetGroup();
 
 	template <typename T> bool hasComponent() const {
 		return componentBitset[getComponentTypeID<T>()];
@@ -103,6 +118,36 @@ public:
 	template<typename T> T& getComponent() const {
 		auto ptr(componentArray[getComponentTypeID<T>()]);
 		return *static_cast<T*>(ptr);
+	}
+
+	template<typename T> int delComponent() {
+		int i = 0;
+		auto y = componentArray[getComponentTypeID<T>()];
+		
+		
+		for (auto& x : components)
+		{
+
+			std::cout << x << std::endl;
+			std::cout << y << std::endl;
+			if (y == x.get()) {
+				components.erase(components.begin() + i);
+				std::cout << 2 << std::endl;
+				break;
+			}
+			i += 1;
+		}
+		
+		componentArray[getComponentTypeID<T>()] = nullptr;
+		componentBitset[getComponentTypeID<T>()] = 0;
+		return 0;
+	}
+
+	int resetComponent() {
+		components.clear();
+		componentArray = {};
+		componentBitset = {};
+		return 0;
 	}
 
 
@@ -142,6 +187,17 @@ public:
 	void AddToGroup(Entity* mEntity, Group mGroup)
 	{
 		groupedEntities[mGroup].emplace_back(mEntity);
+	}
+
+	void AddToGroup(Entity* mEntity, Group mGroup, int i)
+	{
+		groupedEntities[mGroup].insert(std::begin(groupedEntities[mGroup]) + i, mEntity);
+	}
+
+	void DelFromGroup(Entity* mEntity, Group mGroup)
+	{
+		int i = findinvector(groupedEntities[mGroup], mEntity);
+		groupedEntities[mGroup].erase(std::begin(groupedEntities[mGroup]) + i);
 	}
 
 	std::vector<Entity*>& getGroup(Group mGroup)

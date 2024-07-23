@@ -19,7 +19,7 @@ public:
 
 	//gameobjects
 
-	void CreateBanana(Vector2D pos, int scale);
+	void CreateComponent(Vector2D pos, int scale, std::string ID);
 
 //	void AddFont(std::string id, std::string path, int fontSize);
 //	TTF_Font* GetFont(std::string id);

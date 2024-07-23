@@ -34,13 +34,15 @@ public:
 	static AssetManager* assets;
 	static TextureManager* TexManager;
 
+	static const int scale = 1;
+
 	enum groupLabels : std::size_t
 	{
 		groupMap,
 		groupPlayers,
 		groupColliders,
 		groupProjectiles,
-		groupFood
+		groupFood,
 	};
 
 private:

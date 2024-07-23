@@ -11,6 +11,7 @@ public:
 	bool Use;
 	bool pickUp;
 	bool UseInventory;
+	int Selected;
 	void init() override {
 		Use = false;
 		pickUp = false;
@@ -59,6 +60,37 @@ public:
 				case SDLK_q:
 					UseInventory = true;
 					break;
+				case SDLK_1:
+					Selected = 1;
+					break;
+				case SDLK_2:
+					Selected = 2;
+					break;
+				case SDLK_3:
+					Selected = 3;
+					break;
+				case SDLK_4:
+					Selected = 4;
+					break;
+				case SDLK_5:
+					Selected = 5;
+					break;
+				case SDLK_6:
+					Selected = 6;
+					break;
+				case SDLK_7:
+					Selected = 7;
+					break;
+				case SDLK_8:
+					Selected = 8;
+					break;
+				case SDLK_9:
+					Selected = 9;
+					break;
+				case SDLK_0:
+					Selected = 0;
+					break;
+				
 				default:
 					break;
 			}

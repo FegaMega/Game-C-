@@ -37,6 +37,7 @@ public:
 	}
 
 	void update() override {
+		transform = &entity->getComponent<TransformComponent>();
 		destRect.x = (int)transform->position.x;
 		destRect.y = (int)transform->position.y;
 	}
