@@ -1,10 +1,10 @@
 #include "ECS/InventoryComponent.h"
 
 void itemComponent::subAmount(int i) {
-		amount -= i;
-		std::stringstream num;
-		num << amount;
-		Dialogtext->setTex(num.str());
+	amount -= i;
+	std::stringstream num;
+	num << amount;
+	Dialogtext->setTex(num.str());
 }
 void itemComponent::addAmount(int i) {
 	amount += i;
@@ -19,7 +19,7 @@ int itemComponent::getAmount() {
 int InventoryComponent::findFirstEmptySlot() {
 	// return of -1 means no empty slot exists
 	int i = 0;
-	if (items.size() > 0)
+	if (items.size() > 0 and items.size() < 10)
 		for (auto& item : items) {
 			if (item->hasComponent<itemComponent>() == true) {
 				if (item->getComponent<itemComponent>().getAmount() == 0) {
@@ -41,7 +41,7 @@ int InventoryComponent::findFirstEmptySlot() {
 int InventoryComponent::findItemWithSameID(std::string id) {
 	// return of -1 means no item has the same ID
 	int i = 0;
-	if (items.size() > 0)
+	if (items.size() > 0 and items.size() < 10)
 		for (auto& item : items) {
 			if (item->getID() == id) {
 				return i;
@@ -92,9 +92,6 @@ Entity* InventoryComponent::addEntity(int n, Entity* e) {
 
 	items = manager->getGroup(inventory);
 
-	for (auto& a : items) {
-		std::cout << a->getID() << ", ";
-	}
 	std::cout << std::endl;
 	return e;
 }
@@ -123,7 +120,6 @@ void InventoryComponent::addItem(std::string id) {
 void InventoryComponent::addItem(Entity* e) {
 
 	int n = findItemWithSameID(e->getID());
-	std::cout << e->getID() << std::endl;
 	if (n >= 0) {
 
 		items[n]->getComponent<itemComponent>().addAmount(1);
@@ -134,7 +130,6 @@ void InventoryComponent::addItem(Entity* e) {
 		return;
 	}
 	n = findFirstEmptySlot();
-	std::cout << n << std::endl;
 	if (n >= 0) {
 		
 		addEntity(n, e);

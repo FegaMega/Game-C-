@@ -87,9 +87,6 @@ public:
 				case SDLK_9:
 					Selected = 9;
 					break;
-				case SDLK_0:
-					Selected = 0;
-					break;
 				
 				default:
 					break;

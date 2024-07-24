@@ -179,7 +179,7 @@ void Game::update(){ // Error 3.x
 		}
 	}
 	if (Player.getComponent<KeyboardController>().getUseInventory() == true) {
-		Player.getComponent<InventoryComponent>().setSelected(Player.getComponent<KeyboardController>().Selected);
+		Player.getComponent<InventoryComponent>().setSelected(Player.getComponent<KeyboardController>().Selected-1);
 		Entity* selected = Player.getComponent<InventoryComponent>().returnItem(); // return no mater if there is a item, in short crashes
 		if (selected != nullptr){
 				if (selected->getComponent<itemComponent>().getAmount() > 0) {
